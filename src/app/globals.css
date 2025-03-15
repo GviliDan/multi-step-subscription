@@ -70,3 +70,7 @@ body {
 :focus {
   outline-color: hsl(243, 100%, 62%);
 }
+
+button {
+  cursor: pointer;
+}

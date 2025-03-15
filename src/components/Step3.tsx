@@ -1,135 +1,161 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
+import { Step3Data } from "@/types";
 
-interface Step3Props {
+interface IProps {
   nextStep: () => void;
   prevStep: () => void;
+  isYearly: boolean;
+  data: Step3Data;
+  updateData: (data: Step3Data) => void;
 }
 
-export default function Step3({ nextStep, prevStep }: Step3Props) {
-  // For demonstration, isYearly would normally come from global state
-  const [isYearly, setIsYearly] = useState(false);
-  const [onlineService, setOnlineService] = useState(true);
-  const [largerStorage, setLargerStorage] = useState(true);
-  const [customProfile, setCustomProfile] = useState(false);
-
-  const handleNext = () => {
-    nextStep();
-  };
+const Step3: React.FC<IProps> = ({
+  nextStep,
+  prevStep,
+  isYearly,
+  data,
+  updateData,
+}) => {
+  const [onlineService, setOnlineService] = useState(data.addOns.onlineService);
+  const [largerStorage, setLargerStorage] = useState(data.addOns.largerStorage);
+  const [customProfile, setCustomProfile] = useState(data.addOns.customProfile);
 
   const priceOnline = isYearly ? "+$10/yr" : "+$1/mo";
   const priceStorage = isYearly ? "+$20/yr" : "+$2/mo";
   const priceProfile = isYearly ? "+$20/yr" : "+$2/mo";
 
-  return (
-    <>
-      <h2 className="text-2xl font-bold text-[hsl(213,96%,18%)]">Pick add-ons</h2>
-      <p className="text-[hsl(231,11%,63%)] text-sm mb-6">
-        Add-ons help enhance your gaming experience.
-      </p>
+  const handleNext = useCallback(() => {
+    updateData({
+      addOns: {
+        onlineService,
+        largerStorage,
+        customProfile,
+      },
+    });
+    nextStep();
+  }, [onlineService, largerStorage, customProfile, nextStep, updateData]);
 
+  const addOnCards = useMemo(() => {
+    return (
       <div className="space-y-3 mb-6">
-        {/* Online service */}
         <label
           className={`flex items-center border p-3 rounded-md cursor-pointer
-                      hover:border-[hsl(213,96%,18%)] focus-within:ring-2 focus-within:ring-[hsl(243,100%,62%)]
+            hover:border-marine-blue focus-within:ring-2 focus-within:ring-purplish-blue
             ${
               onlineService
-                ? "border-[hsl(213,96%,18%)] bg-[hsl(217,100%,97%)]"
-                : "border-[hsl(229,24%,87%)]"
+                ? "border-marine-blue bg-magnolia"
+                : "border-light-gray"
             }`}
         >
           <input
             type="checkbox"
             checked={onlineService}
-            onChange={(e) => setOnlineService(e.target.checked)}
-            className="mr-3 accent-[hsl(243,100%,62%)] focus:outline-none"
+            onChange={() => setOnlineService((prev) => !prev)}
+            className="mr-3 accent-purplish-blue"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-[hsl(213,96%,18%)]">Online service</span>
-            <span className="text-sm text-[hsl(231,11%,63%)]">
+            <span className="font-medium text-marine-blue">Online service</span>
+            <span className="text-sm text-cool-gray">
               Access to multiplayer games
             </span>
           </div>
-          <span className="ml-auto text-[hsl(243,100%,62%)] text-sm">
+          <span className="ml-auto text-purplish-blue text-sm">
             {priceOnline}
           </span>
         </label>
 
-        {/* Larger storage */}
         <label
           className={`flex items-center border p-3 rounded-md cursor-pointer
-                      hover:border-[hsl(213,96%,18%)] focus-within:ring-2 focus-within:ring-[hsl(243,100%,62%)]
+            hover:border-marine-blue focus-within:ring-2 focus-within:ring-purplish-blue
             ${
               largerStorage
-                ? "border-[hsl(213,96%,18%)] bg-[hsl(217,100%,97%)]"
-                : "border-[hsl(229,24%,87%)]"
+                ? "border-marine-blue bg-magnolia"
+                : "border-light-gray"
             }`}
         >
           <input
             type="checkbox"
             checked={largerStorage}
-            onChange={(e) => setLargerStorage(e.target.checked)}
-            className="mr-3 accent-[hsl(243,100%,62%)] focus:outline-none"
+            onChange={() => setLargerStorage((prev) => !prev)}
+            className="mr-3 accent-purplish-blue"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-[hsl(213,96%,18%)]">Larger storage</span>
-            <span className="text-sm text-[hsl(231,11%,63%)]">
+            <span className="font-medium text-marine-blue">Larger storage</span>
+            <span className="text-sm text-cool-gray">
               Extra 1TB of cloud save
             </span>
           </div>
-          <span className="ml-auto text-[hsl(243,100%,62%)] text-sm">
+          <span className="ml-auto text-purplish-blue text-sm">
             {priceStorage}
           </span>
         </label>
 
-        {/* Customizable profile */}
         <label
           className={`flex items-center border p-3 rounded-md cursor-pointer
-                      hover:border-[hsl(213,96%,18%)] focus-within:ring-2 focus-within:ring-[hsl(243,100%,62%)]
+            hover:border-marine-blue focus-within:ring-2 focus-within:ring-purplish-blue
             ${
               customProfile
-                ? "border-[hsl(213,96%,18%)] bg-[hsl(217,100%,97%)]"
-                : "border-[hsl(229,24%,87%)]"
+                ? "border-marine-blue bg-magnolia"
+                : "border-light-gray"
             }`}
         >
           <input
             type="checkbox"
             checked={customProfile}
-            onChange={(e) => setCustomProfile(e.target.checked)}
-            className="mr-3 accent-[hsl(243,100%,62%)] focus:outline-none"
+            onChange={() => setCustomProfile((prev) => !prev)}
+            className="mr-3 accent-purplish-blue"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-[hsl(213,96%,18%)]">Customizable profile</span>
-            <span className="text-sm text-[hsl(231,11%,63%)]">
+            <span className="font-medium text-marine-blue">
+              Customizable profile
+            </span>
+            <span className="text-sm text-cool-gray">
               Custom theme on your profile
             </span>
           </div>
-          <span className="ml-auto text-[hsl(243,100%,62%)] text-sm">
+          <span className="ml-auto text-purplish-blue text-sm">
             {priceProfile}
           </span>
         </label>
       </div>
+    );
+  }, [
+    onlineService,
+    largerStorage,
+    customProfile,
+    priceOnline,
+    priceStorage,
+    priceProfile,
+  ]);
 
-      {/* Navigation */}
+  return (
+    <>
+      <h2 className="text-2xl font-bold text-marine-blue">Pick add-ons</h2>
+      <p className="text-cool-gray text-sm mb-6">
+        Add-ons help enhance your gaming experience.
+      </p>
+
+      {addOnCards}
+
       <div className="flex justify-between">
         <button
           type="button"
           onClick={prevStep}
-          className="text-[hsl(231,11%,63%)] hover:text-[hsl(213,96%,18%)] focus:outline-none 
-                     focus:ring-2 focus:ring-[hsl(243,100%,62%)] rounded"
+          className="text-cool-gray hover:text-marine-blue focus:outline-none focus:ring-2 focus:ring-purplish-blue rounded"
         >
           Go Back
         </button>
         <button
           type="button"
           onClick={handleNext}
-          className="bg-[hsl(213,96%,18%)] text-white px-6 py-2 rounded-md hover:opacity-90
-                     focus:outline-none focus:ring-2 focus:ring-[hsl(243,100%,62%)]"
+          className="bg-marine-blue text-white px-6 py-2 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purplish-blue"
         >
           Next Step
         </button>
       </div>
     </>
   );
-}
+};
+
+export default Step3;

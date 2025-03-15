@@ -1,3 +1,5 @@
+import { PlanType } from "./enums";
+
 export type IStep1FormData = {
   name: string;
   email: string;

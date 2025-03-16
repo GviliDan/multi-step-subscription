@@ -41,3 +41,11 @@ export interface PlanConfig {
   monthlyPrice: string;
   yearlyPrice: string;
 }
+
+export interface Step1Methods {
+  submitForm: () => Promise<boolean>;
+}
+
+export interface Step2Methods {
+  submitPlan: () => Promise<boolean>;
+}

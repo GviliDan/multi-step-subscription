@@ -16,7 +16,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
   prevLabel = "Go Back",
 }) => {
   const buttonBg =
-    nextLabel === "Confirm" ? "bg-marine-blue" : "bg-purplish-blue";
+    nextLabel === "Confirm" ? "bg-purplish-blue" : "bg-marine-blue";
 
   return (
     <div className="flex justify-between">

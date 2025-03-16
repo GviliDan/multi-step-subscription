@@ -9,7 +9,7 @@ interface IProps {
 
 const Sidebar: React.FC<IProps> = ({ currentStep }) => {
   return (
-    <div className="relative md:w-1/3 text-white">
+    <div className="relative w-full md:w-1/3 h-44 md:h-auto text-white">
       <div className="absolute inset-0 md:hidden">
         <Image
           src={mobileBg}
@@ -26,14 +26,16 @@ const Sidebar: React.FC<IProps> = ({ currentStep }) => {
           className="object-cover"
         />
       </div>
-      <div className="relative z-10 p-8 space-y-6">
+
+      <div className="relative z-10 md:h-full md:mt-0 mt-4 flex flex-row md:flex-col md:items-center md:items-start justify-center md:justify-start p-4 md:p-8">
         {SLIDE_BAR_STEPS.map((label, index) => {
           const stepNumber = index + 1;
           const active = currentStep === stepNumber;
+
           return (
             <div
               key={label}
-              className={`flex items-center space-x-3 ${
+              className={`flex items-center mb-0 md:mb-6 mx-2 md:mx-0 ${
                 active ? "font-bold" : "opacity-75"
               }`}
             >
@@ -46,7 +48,8 @@ const Sidebar: React.FC<IProps> = ({ currentStep }) => {
               >
                 {stepNumber}
               </div>
-              <div className="flex flex-col text-xs uppercase tracking-wider">
+
+              <div className="hidden md:flex flex-col text-xs uppercase tracking-wider ml-2">
                 <span className="text-[0.65rem]">Step {stepNumber}</span>
                 <strong className="text-sm">{label}</strong>
               </div>

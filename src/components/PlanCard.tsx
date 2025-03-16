@@ -17,29 +17,33 @@ const PlanCard: React.FC<IProps> = ({
   onSelect,
 }) => {
   const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+
   return (
     <button
       type="button"
       onClick={() => onSelect(plan.type)}
-      className={`text-left border rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-purplish-blue 
+      className={`border rounded-xl p-4 w-full text-left
         ${
           isSelected
             ? "border-marine-blue bg-magnolia"
             : "border-light-gray hover:border-marine-blue"
         }`}
     >
-      <Image
-        src={plan.icon}
-        alt={plan.label}
-        width={40}
-        height={40}
-        className="mb-3"
-      />
-      <h3 className="font-medium text-marine-blue">{plan.label}</h3>
-      <p className="text-cool-gray text-sm">{price}</p>
-      {isYearly && (
-        <p className="text-purplish-blue text-xs font-medium">2 months free</p>
-      )}
+      <div className="flex flex-row md:flex-col items-start md:items-start md:gap-8 gap-4">
+        <div className="rounded-full flex items-center justify-center">
+          <Image src={plan.icon} alt={plan.label} width={40} height={40} />
+        </div>
+
+        <div className="flex flex-col">
+          <h3 className="font-bold text-marine-blue text-lg">{plan.label}</h3>
+          <p className="text-gray-400 text-sm font-medium">{price}</p>
+          {isYearly && (
+            <p className="text-marine-blue text-xs font-medium mt-1">
+              2 months free
+            </p>
+          )}
+        </div>
+      </div>
     </button>
   );
 };

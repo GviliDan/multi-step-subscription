@@ -1,9 +1,15 @@
 import advancedIcon from "@/assets/images/icon-advanced.svg";
 import arcadeIcon from "@/assets/images/icon-arcade.svg";
 import proIcon from "@/assets/images/icon-pro.svg";
-import { PlanConfig, Step2Data } from "@/types";
+import { PlanConfig, Step2Data, Step2Methods } from "@/types";
 import { PlanType } from "@/types/enums";
-import React, { useCallback, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import PlanCard from "./PlanCard";
 import StepNavigation from "./StepNavigation";
 
@@ -14,8 +20,8 @@ interface IProps {
   updateData: (data: Step2Data) => void;
 }
 
-
-const Step2: React.FC<IProps> = ({ nextStep, prevStep, data, updateData }) => {
+const Step2 = forwardRef<Step2Methods, IProps>((props, ref) => {
+  const { nextStep, prevStep, data, updateData } = props;
 
   const plans: PlanConfig[] = [
     {
@@ -40,12 +46,18 @@ const Step2: React.FC<IProps> = ({ nextStep, prevStep, data, updateData }) => {
       yearlyPrice: "$150/yr",
     },
   ];
+
   const [selectedPlan, setSelectedPlan] = useState<PlanType>(data.selectedPlan);
   const [isYearly, setIsYearly] = useState<boolean>(data.isYearly);
   const [error, setError] = useState<string>("");
 
-  const planCards = useMemo(
-    () => (
+  const handleSelectPlan = (planType: PlanType) => {
+    setSelectedPlan(planType);
+    updateData({ selectedPlan: planType, isYearly });
+  };
+
+  const planCards = useMemo(() => {
+    return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {plans.map((plan) => (
           <PlanCard
@@ -53,26 +65,34 @@ const Step2: React.FC<IProps> = ({ nextStep, prevStep, data, updateData }) => {
             plan={plan}
             isSelected={selectedPlan === plan.type}
             isYearly={isYearly}
-            onSelect={setSelectedPlan}
+            onSelect={handleSelectPlan}
           />
         ))}
       </div>
-    ),
-    [selectedPlan, isYearly]
-  );
+    );
+  }, [selectedPlan, isYearly]);
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback((): boolean => {
     if (selectedPlan === PlanType.None) {
       setError("Please select a plan.");
-      return;
+      return false;
     }
     setError("");
     updateData({ selectedPlan, isYearly });
-    nextStep();
-  }, [selectedPlan, isYearly, nextStep, updateData]);
+
+    return true;
+  }, [selectedPlan, isYearly, updateData]);
+
+  useImperativeHandle(ref, () => ({
+    submitPlan: () =>
+      new Promise<boolean>((resolve) => {
+        const result = handleNext();
+        resolve(result);
+      }),
+  }));
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <h2 className="text-2xl font-bold text-marine-blue">Select your plan</h2>
       <p className="text-cool-gray text-sm mb-6">
         You have the option of monthly or yearly billing.
@@ -82,8 +102,12 @@ const Step2: React.FC<IProps> = ({ nextStep, prevStep, data, updateData }) => {
 
       {error && <p className="text-strawberry-red mb-4 text-sm">{error}</p>}
 
-      <div className="bg-magnolia p-3 rounded-md flex items-center justify-center space-x-4 mb-6">
-        <span className={!isYearly ? "text-marine-blue font-medium" : "text-cool-gray"}>
+      <div className="bg-magnolia p-3 rounded-md flex items-center justify-center space-x-4 md:mb-6">
+        <span
+          className={
+            !isYearly ? "text-marine-blue font-medium" : "text-cool-gray"
+          }
+        >
           Monthly
         </span>
         <label className="relative inline-flex items-center cursor-pointer focus-within:ring-2 focus-within:ring-purplish-blue">
@@ -96,18 +120,28 @@ const Step2: React.FC<IProps> = ({ nextStep, prevStep, data, updateData }) => {
           <div className="w-11 h-6 bg-light-gray rounded-full peer peer-checked:bg-purplish-blue transition-all" />
           <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-5 transition-all" />
         </label>
-        <span className={isYearly ? "text-marine-blue font-medium" : "text-cool-gray"}>
+        <span
+          className={
+            isYearly ? "text-marine-blue font-medium" : "text-cool-gray"
+          }
+        >
           Yearly
         </span>
       </div>
 
-      <StepNavigation
-        onPrev={prevStep}
-        onNext={handleNext}
-        nextDisabled={selectedPlan === PlanType.None}
-      />
-    </>
+      <div className="mt-auto hidden md:block">
+        <StepNavigation
+          onPrev={prevStep}
+          onNext={() => {
+            if (handleNext()) {
+              nextStep();
+            }
+          }}
+          nextDisabled={selectedPlan === PlanType.None}
+        />
+      </div>
+    </div>
   );
-};
+});
 
 export default Step2;

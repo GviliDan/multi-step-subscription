@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/image";
 import { PlanType } from "./enums";
 
 export type IStep1FormData = {
@@ -31,4 +32,12 @@ export interface IAddOns {
 
 export interface Step3Data {
   addOns: IAddOns;
+}
+
+export interface PlanConfig {
+  type: PlanType;
+  label: string;
+  icon: StaticImageData;
+  monthlyPrice: string;
+  yearlyPrice: string;
 }

@@ -1,6 +1,7 @@
-"use client";
-import React, { useState, useCallback, useMemo } from "react";
 import { Step3Data } from "@/types";
+import React, { useCallback, useState } from "react";
+import AddOnCard from "./AddOnCard";
+import StepNavigation from "./StepNavigation";
 
 interface IProps {
   nextStep: () => void;
@@ -36,99 +37,6 @@ const Step3: React.FC<IProps> = ({
     nextStep();
   }, [onlineService, largerStorage, customProfile, nextStep, updateData]);
 
-  const addOnCards = useMemo(() => {
-    return (
-      <div className="space-y-3 mb-6">
-        <label
-          className={`flex items-center border p-3 rounded-md cursor-pointer
-            hover:border-marine-blue focus-within:ring-2 focus-within:ring-purplish-blue
-            ${
-              onlineService
-                ? "border-marine-blue bg-magnolia"
-                : "border-light-gray"
-            }`}
-        >
-          <input
-            type="checkbox"
-            checked={onlineService}
-            onChange={() => setOnlineService((prev) => !prev)}
-            className="mr-3 accent-purplish-blue"
-          />
-          <div className="flex flex-col">
-            <span className="font-medium text-marine-blue">Online service</span>
-            <span className="text-sm text-cool-gray">
-              Access to multiplayer games
-            </span>
-          </div>
-          <span className="ml-auto text-purplish-blue text-sm">
-            {priceOnline}
-          </span>
-        </label>
-
-        <label
-          className={`flex items-center border p-3 rounded-md cursor-pointer
-            hover:border-marine-blue focus-within:ring-2 focus-within:ring-purplish-blue
-            ${
-              largerStorage
-                ? "border-marine-blue bg-magnolia"
-                : "border-light-gray"
-            }`}
-        >
-          <input
-            type="checkbox"
-            checked={largerStorage}
-            onChange={() => setLargerStorage((prev) => !prev)}
-            className="mr-3 accent-purplish-blue"
-          />
-          <div className="flex flex-col">
-            <span className="font-medium text-marine-blue">Larger storage</span>
-            <span className="text-sm text-cool-gray">
-              Extra 1TB of cloud save
-            </span>
-          </div>
-          <span className="ml-auto text-purplish-blue text-sm">
-            {priceStorage}
-          </span>
-        </label>
-
-        <label
-          className={`flex items-center border p-3 rounded-md cursor-pointer
-            hover:border-marine-blue focus-within:ring-2 focus-within:ring-purplish-blue
-            ${
-              customProfile
-                ? "border-marine-blue bg-magnolia"
-                : "border-light-gray"
-            }`}
-        >
-          <input
-            type="checkbox"
-            checked={customProfile}
-            onChange={() => setCustomProfile((prev) => !prev)}
-            className="mr-3 accent-purplish-blue"
-          />
-          <div className="flex flex-col">
-            <span className="font-medium text-marine-blue">
-              Customizable profile
-            </span>
-            <span className="text-sm text-cool-gray">
-              Custom theme on your profile
-            </span>
-          </div>
-          <span className="ml-auto text-purplish-blue text-sm">
-            {priceProfile}
-          </span>
-        </label>
-      </div>
-    );
-  }, [
-    onlineService,
-    largerStorage,
-    customProfile,
-    priceOnline,
-    priceStorage,
-    priceProfile,
-  ]);
-
   return (
     <>
       <h2 className="text-2xl font-bold text-marine-blue">Pick add-ons</h2>
@@ -136,24 +44,35 @@ const Step3: React.FC<IProps> = ({
         Add-ons help enhance your gaming experience.
       </p>
 
-      {addOnCards}
-
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={prevStep}
-          className="text-cool-gray hover:text-marine-blue focus:outline-none focus:ring-2 focus:ring-purplish-blue rounded"
-        >
-          Go Back
-        </button>
-        <button
-          type="button"
-          onClick={handleNext}
-          className="bg-marine-blue text-white px-6 py-2 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purplish-blue"
-        >
-          Next Step
-        </button>
+      <div className="space-y-3 mb-6">
+        <AddOnCard
+          label="Online service"
+          description="Access to multiplayer games"
+          price={priceOnline}
+          checked={onlineService}
+          onChange={() => setOnlineService((prev) => !prev)}
+        />
+        <AddOnCard
+          label="Larger storage"
+          description="Extra 1TB of cloud save"
+          price={priceStorage}
+          checked={largerStorage}
+          onChange={() => setLargerStorage((prev) => !prev)}
+        />
+        <AddOnCard
+          label="Customizable profile"
+          description="Custom theme on your profile"
+          price={priceProfile}
+          checked={customProfile}
+          onChange={() => setCustomProfile((prev) => !prev)}
+        />
       </div>
+
+      <StepNavigation
+        onPrev={prevStep}
+        onNext={handleNext}
+        nextLabel="Next Step"
+      />
     </>
   );
 };

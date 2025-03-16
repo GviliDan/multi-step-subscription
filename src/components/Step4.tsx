@@ -1,8 +1,8 @@
-"use client";
-import React, { useMemo, useCallback } from "react";
-import { calculateTotalPrice } from "@/utils/calculateTotal";
 import { IFormData } from "@/types";
 import { PlanType } from "@/types/enums";
+import { calculateTotalPrice } from "@/utils/calculateTotal";
+import React, { useCallback, useMemo } from "react";
+import StepNavigation from "./StepNavigation";
 
 interface IProps {
   nextStep: () => void;
@@ -11,12 +11,7 @@ interface IProps {
   updateBilling: (isYearly: boolean) => void;
 }
 
-const Step4: React.FC<IProps> = ({
-  nextStep,
-  prevStep,
-  data,
-  updateBilling,
-}) => {
+const Step4: React.FC<IProps> = ({ nextStep, prevStep, data, updateBilling }) => {
   const { step2, step3 } = data;
 
   const planCost = useMemo(() => {
@@ -130,22 +125,7 @@ const Step4: React.FC<IProps> = ({
         <span className="text-purplish-blue font-bold text-lg">{total}</span>
       </div>
 
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={prevStep}
-          className="text-cool-gray hover:text-marine-blue focus:outline-none focus:ring-2 focus:ring-purplish-blue rounded"
-        >
-          Go Back
-        </button>
-        <button
-          type="button"
-          onClick={nextStep}
-          className="bg-purplish-blue text-white px-6 py-2 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purplish-blue"
-        >
-          Confirm
-        </button>
-      </div>
+      <StepNavigation onPrev={prevStep} onNext={nextStep} nextLabel="Confirm" />
     </>
   );
 };

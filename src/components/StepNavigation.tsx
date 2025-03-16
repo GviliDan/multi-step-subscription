@@ -15,6 +15,9 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
   nextLabel = "Next Step",
   prevLabel = "Go Back",
 }) => {
+  const buttonBg =
+    nextLabel === "Confirm" ? "bg-marine-blue" : "bg-purplish-blue";
+
   return (
     <div className="flex justify-between">
       <button
@@ -28,7 +31,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
         type="button"
         onClick={onNext}
         disabled={nextDisabled}
-        className={`bg-marine-blue text-white px-6 py-2 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purplish-blue ${
+        className={`${buttonBg} text-white px-6 py-2 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purplish-blue ${
           nextDisabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >

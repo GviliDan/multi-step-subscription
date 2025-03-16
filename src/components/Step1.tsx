@@ -10,7 +10,7 @@ interface IProps {
   updateData: (data: IStep1FormData) => void;
 }
 
-const Step1 = forwardRef<Step1Methods, IProps>((props, ref) => {
+const Step1 = forwardRef<Step1Methods, IProps>(function Step1(props, ref) {
   const { nextStep, data, updateData } = props;
   const {
     register,

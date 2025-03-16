@@ -20,7 +20,7 @@ interface IProps {
   updateData: (data: Step2Data) => void;
 }
 
-const Step2 = forwardRef<Step2Methods, IProps>((props, ref) => {
+const Step2 = forwardRef<Step2Methods, IProps>(function Step2(props, ref) {
   const { nextStep, prevStep, data, updateData } = props;
 
   const plans: PlanConfig[] = [
